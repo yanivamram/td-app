@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/yanivamram/td-app/proto/helloworld"
+	pb "github.com/yanivamram/td-app/proto/helloworld.proto"
 
 	"google.golang.org/grpc"
 )
