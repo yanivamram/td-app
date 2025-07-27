@@ -33,4 +33,5 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
+	fmt.Println("Server started")
 }

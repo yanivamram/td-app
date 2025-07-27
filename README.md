@@ -10,14 +10,10 @@ Getting started
 ```echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.zshrc``` (only once!)
 ```source ~/.zshrc```
 3. Install the Go protobuf plugins
-```go install google.golang.org/protobuf/cmd/protoc-gen-go@latest```
-```go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest```
+```go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34```
+```go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.4```
 4. Make sure you are able to build the app:
-```protoc \
-  --proto_path=proto \
-  --go_out=gen --go-grpc_out=gen \
-  proto/helloworld.proto
-```
+```protoc --go_out=. --go-grpc_out=. --go-grpc_opt=require_unimplemented_servers=false proto/helloworld.proto```
 5. Generate go.sum
 ```go mod tidy```
 6. Install docker
@@ -27,5 +23,13 @@ Getting started
 ```docker build -t td-app-app -f server/Dockerfile .```
 8. OPTIONAL: run the server locally
 ```docker run --rm -p 50051:50051 td-app-server```
-
+9. OPTIONAL: tag and push to GCR
+First Authenticate:
+```gcloud auth configure-docker```
+```gcloud auth login```
+```gcloud config set project <project-id>```
+Tag and Push:
+```docker tag td-app-app gcr.io/<project-id>/td-app-app:latest```
+```docker push gcr.io/<project-id>/td-app-app:latest``` 
+(assuming authenticated)
 
