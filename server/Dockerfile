@@ -1,20 +1,17 @@
-# Stage 1: Build the Go binary
+# Use official Golang image for building
 FROM golang:1.21 AS builder
 
 WORKDIR /app
 
-# Copy go mod files and download dependencies
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY . .
 
-# Build the server binary
 WORKDIR /app/server
-RUN CGO_ENABLED=0 GOOS=linux go build -o /server
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server .
 
-# Stage 2: Minimal runtime image
+# Use a minimal base image to run
 FROM gcr.io/distroless/static
 
 COPY --from=builder /server /server
