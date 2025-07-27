@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	pb "your/module/path/helloworld"
+	pb "github.com/yanivamram/td-app/proto/helloworld.proto"
 
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/xds" // Register xDS resolver
