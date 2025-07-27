@@ -1,36 +1,45 @@
 package main
 
-import "google.golang.org/grpc/credentials/insecure"
-
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
-	pb "github.com/yanivamram/td-app/gen/helloworld"
-
 	"google.golang.org/grpc"
-	_ "google.golang.org/grpc/xds" // Register xDS resolver
+	"google.golang.org/grpc/credentials/insecure"
+	_ "google.golang.org/grpc/xds" // registers the xds resolver
+
+	pb "github.com/yanivamram/td-app/gen/helloworld"
 )
 
 func main() {
+	// Target must match the service name registered in Traffic Director
+	target := "xds:///greeter"
+
 	conn, err := grpc.Dial(
-		"xds:///greeter",
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		target,
+		grpc.WithTransportCredentials(insecure.NewCredentials()), // Use mTLS in production
 	)
 	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
+		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 
 	client := pb.NewGreeterClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "TrafficDirector"})
-	if err != nil {
-		log.Fatalf("Could not greet: %v", err)
+	name := "World"
+	if len(os.Args) > 1 {
+		name = os.Args[1]
 	}
+
+	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: name})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
 	log.Printf("Greeting: %s", resp.GetMessage())
 }
