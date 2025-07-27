@@ -3,7 +3,7 @@ syntax = "proto3";
 package helloworld;
 
 // option for the protoc-gen-go to determine import paths
-option go_package = "github.com/yanivamram/td-app/gen/helloworld;helloworld";
+option go_package = "gen/helloworld";
 
 service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply);

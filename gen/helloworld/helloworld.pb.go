@@ -121,7 +121,7 @@ const file_helloworld_proto_rawDesc = "" +
 	"HelloReply\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage2G\n" +
 	"\aGreeter\x12<\n" +
-	"\bSayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReplyB8Z6github.com/yanivamram/td-app/gen/helloworld;helloworldb\x06proto3"
+	"\bSayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReplyB\x10Z\x0egen/helloworldb\x06proto3"
 
 var (
 	file_helloworld_proto_rawDescOnce sync.Once
