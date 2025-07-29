@@ -1,5 +1,6 @@
 package main
 
+import "google.golang.org/grpc/credentials/insecure"
 import (
 	"context"
 	"log"
@@ -7,19 +8,19 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	_ "google.golang.org/grpc/xds" // registers the xds resolver
+	"google.golang.org/grpc/xds"
 
 	pb "github.com/yanivamram/td-app/gen/helloworld"
 )
 
 func main() {
-	// Target must match the service name registered in Traffic Director
-	target := "xds:///greeter"
+	target := "xds:///sayhello-server.default.svc.cluster.local"
 
+	// Use xDS-enabled client
 	conn, err := grpc.Dial(
 		target,
-		grpc.WithTransportCredentials(insecure.NewCredentials()), // Use mTLS in production
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithResolvers(xds.NewResolverWithConfigForTesting(nil)),
 	)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -28,7 +29,7 @@ func main() {
 
 	client := pb.NewGreeterClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
 	name := "World"

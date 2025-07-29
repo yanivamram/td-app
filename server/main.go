@@ -49,7 +49,13 @@ func main() {
 
 	// Register Health
 	healthServer := health.NewServer()
+
+	// Set empty service as SERVING (optional)
 	healthServer.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+
+	// Add your gRPC service name here
+	healthServer.SetServingStatus("helloworld.Greeter", healthpb.HealthCheckResponse_SERVING)
+
 	healthpb.RegisterHealthServer(grpcServer, healthServer)
 
 	// Optional: Reflection for debugging (e.g., with grpcurl)
